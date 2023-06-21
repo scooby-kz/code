@@ -1,13 +1,19 @@
 from datetime import datetime, timedelta, time,date
    
-def num_of_sundays(year1):
-    start = datetime(year=year1,month=1,day=1)
-    end = datetime(year=year1,month=12,day=31)
-    lst = ([start.toordinal(), end.toordinal()])
-    sun = 0
-    for i in range (lst[0],lst[1]):
-        if date.fromordinal(i).isoweekday() == 6:
-            sun += 1
-    return (sun)
+pattern = '%d.%m.%Y %H:%M'
+schedule = (
+    (timedelta(hours=9), timedelta(hours=21)),
+    (timedelta(hours=9), timedelta(hours=21)),
+    (timedelta(hours=9), timedelta(hours=21)),
+    (timedelta(hours=9), timedelta(hours=21)),
+    (timedelta(hours=9), timedelta(hours=21)),
+    (timedelta(hours=10), timedelta(hours=18)),
+    (timedelta(hours=10), timedelta(hours=18))
+)
 
-print(num_of_sundays(2022))
+client_time = datetime.strptime('02.11.2021 21:15', pattern)
+
+if schedule[client_time.weekday()][0] <= timedelta(hours=client_time.hour,minutes=client_time.minute) <= schedule[client_time.weekday()][1]:
+    print ((schedule[client_time.weekday()][1]-timedelta(hours=client_time.hour,minutes=client_time.minute)).seconds//60)
+else:
+    print("Магазин закрыт")
